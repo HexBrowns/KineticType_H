@@ -1,4 +1,4 @@
-//! `UTF8@FlowType_H`。原作 modules/intern/text/intern/utf8.cpp の移植。
+//! `UTF8@KineticType_H`。原作 modules/intern/text/intern/utf8.cpp の移植。
 
 use super::{BAD_ENCODING, WRONG_COUNT};
 use crate::smp::Smp;

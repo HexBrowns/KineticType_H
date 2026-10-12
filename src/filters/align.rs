@@ -1,4 +1,4 @@
-//! 整列@FlowType_H（原作 Align@FlowType_H）。原作 filters/intern/align/intern/align.cpp の移植。
+//! 整列@キネティックタイポ_H（原作 Align@FlowType_K）。原作 filters/intern/align/intern/align.cpp の移植。
 //!
 //! 画像の大きさに対する割合（-1000〜1000、100 で画像の半分）でピボットや位置をずらす。
 
@@ -42,7 +42,7 @@ impl FilterPlugin for Align {
 
     fn plugin_info(&self) -> FilterPluginTable {
         FilterPluginTable {
-            name: "整列@FlowType_H".to_string(),
+            name: "整列@キネティックタイポ_H".to_string(),
             label: Some(LABEL.to_string()),
             information: information("整列"),
             flags: aviutl2::bitflag!(aviutl2::filter::FilterPluginFlags { video: true }),

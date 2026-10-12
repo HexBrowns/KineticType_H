@@ -1,4 +1,4 @@
-//! `Hash@FlowType_H`。原作 modules/intern/hash/intern/hash.cpp の移植。
+//! `Hash@KineticType_H`。原作 modules/intern/hash/intern/hash.cpp の移植。
 //!
 //! pcg4d は Mark Jarzynski & Marc Olano の PCG3D（https://github.com/markjarzynski/PCG3D/blob/master/LICENSE）を
 //! 原作が改変したもの。乱数の値が変わると見た目が変わるので、式と整数への変換を原作と同じにしてある。

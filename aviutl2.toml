@@ -4,47 +4,48 @@
 #   au2 release   テストしてからビルドし、release/ に au2pkg とカタログ用の catalog.json を作る
 # project.version は Cargo.toml の version と揃える。
 #
-# スクリプト（@FlowType_H.anm2）は build_scripts.py が scripts/effects/*.lua から生成する（astra が要る）。
+# スクリプト（@キネティックタイポ_H.anm2）は build_scripts.py が scripts/effects/*.lua から生成する（astra が要る）。
 # 原作の C++ プラグイン（plugins/）と astra.toml の [release] は使わない。
+# v0.3.x までの名前は FlowType_H（id は HexBrowns.FlowType_H）。2026-10-12 に改名した。
 
 [project]
-id = "HexBrowns.FlowType_H"
-name = "FlowType_H"
-version = "0.3.2"
+id = "HexBrowns.KineticType_H"
+name = "KineticType_H"
+version = "0.4.0"
 
-[artifacts."FlowType_H.aux2"]
+[artifacts."KineticType_H.aux2"]
 build = "cargo build --release"
-source = "target/release/flowtype_h.dll"
-destination = "Plugin/FlowType_H/FlowType_H.aux2"
+source = "target/release/kinetic_type_h.dll"
+destination = "Plugin/KineticType_H/KineticType_H.aux2"
 
-[artifacts."@FlowType_H.anm2"]
+[artifacts."@キネティックタイポ_H.anm2"]
 build = "python build_scripts.py --no-deploy"
-source = "build/effect/release/@FlowType_H.anm2"
-destination = "Script/FlowType_H/@FlowType_H.anm2"
+source = "build/effect/release/@キネティックタイポ_H.anm2"
+destination = "Script/KineticType_H/@キネティックタイポ_H.anm2"
 
 [artifacts."README.md"]
 source = "README.md"
-destination = "Script/FlowType_H/README.md"
+destination = "Script/KineticType_H/README.md"
 
 [artifacts."CHANGELOG.md"]
 source = "CHANGELOG.md"
-destination = "Script/FlowType_H/CHANGELOG.md"
+destination = "Script/KineticType_H/CHANGELOG.md"
 
 [artifacts."LICENSE"]
 source = "LICENSE"
-destination = "Script/FlowType_H/LICENSE"
+destination = "Script/KineticType_H/LICENSE"
 
 [artifacts."THIRD_PARTY_LICENSES.md"]
 source = "THIRD_PARTY_LICENSES.md"
-destination = "Script/FlowType_H/THIRD_PARTY_LICENSES.md"
+destination = "Script/KineticType_H/THIRD_PARTY_LICENSES.md"
 
-[artifacts."モーション@FlowType_H.Factory.Lyric.preset"]
-source = "presets/モーション@FlowType_H.Factory.Lyric.preset"
-destination = "Preset/モーション@FlowType_H.Factory.Lyric.preset"
+[artifacts."モーション@キネティックタイポ_H.Factory.Lyric.preset"]
+source = "presets/モーション@キネティックタイポ_H.Factory.Lyric.preset"
+destination = "Preset/モーション@キネティックタイポ_H.Factory.Lyric.preset"
 
-[artifacts."モーション@FlowType_H.Factory.Stretch.preset"]
-source = "presets/モーション@FlowType_H.Factory.Stretch.preset"
-destination = "Preset/モーション@FlowType_H.Factory.Stretch.preset"
+[artifacts."モーション@キネティックタイポ_H.Factory.Stretch.preset"]
+source = "presets/モーション@キネティックタイポ_H.Factory.Stretch.preset"
+destination = "Preset/モーション@キネティックタイポ_H.Factory.Stretch.preset"
 
 [release]
 # テストの後、インストール時のダイアログに本体・原作・依存クレートのライセンスを出す
@@ -56,6 +57,6 @@ package_template = "release/package.txt"
 package_information = "{name} v{version} by HexBrowns"
 
 [catalog]
-id = "HexBrowns.FlowType_H"
+id = "HexBrowns.KineticType_H"
 license_path = { type = "MIT", path = "./LICENSE" }
-download_repo = { owner = "HexBrowns", repo = "FlowType_H" }
+download_repo = { owner = "HexBrowns", repo = "KineticType_H" }

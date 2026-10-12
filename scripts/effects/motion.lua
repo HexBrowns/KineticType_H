@@ -95,8 +95,27 @@ local should_highlight = false --check@should_highlight:重なりを強調,false
 -- K互換のため末尾に追加（途中挿入すると旧aup2の位置ずれが起きる）
 local motion_word_mode = 1 --select@motion_word_mode:モーション::単語分割=1,空白のみ（従来）=0,強化（句読点・文字種）=1,文節（簡易）=2
 -- M4: AE Range Selector Shape / Ease High-Low 相当（末尾追加）
-local motion_selector_shape = 0 --select@motion_selector_shape:モーション::選択形状,正方形=0,ランプアップ=1,ランプダウン=2,三角=3
+local motion_selector_shape = 0 --select@motion_selector_shape:モーション::選択形状,正方形=0,ランプアップ=1,ランプダウン=2,三角=3,円形=4,スムーズ=5
 local motion_selector_feather = 0.0 --track@motion_selector_feather:モーション::選択フェザー,0,100,0,0.01
+-- AE Range Selector の Ease High / Ease Low（末尾追加。0 で従来どおり）。100 で緩やか、-100 で急に移り変わる
+local motion_ease_high = 0.0 --track@motion_ease_high:モーション::イーズ高,-100,100,0,0.01
+local motion_ease_low = 0.0 --track@motion_ease_low:モーション::イーズ低,-100,100,0,0.01
+-- 文字のデコード（AE の文字の値・文字のオフセット、Red Giant の Hacker Text 相当。末尾追加。方式 なし で従来どおり）
+-- 範囲セレクターの選択量が残っている間は入れ替え、選択量が 0 になった文字から元の文字に確定する
+--group:デコード,false
+local decode_mode = 0 --select@decode_mode:デコード::方式=0,なし=0,ランダム（文字種を保つ）=1,ランダム（候補から）=2,オフセット=3
+local decode_pool = "" --string@decode_pool:デコード::候補,
+--hide@decode_pool:decode_mode~=2
+local decode_offset = 10 --track@decode_offset:デコード::オフセット,-1000,1000,10,1
+--hide@decode_offset:decode_mode~=3
+local decode_interval = 2.0 --track@decode_interval:デコード::間隔,0,1000,2,0.001
+--hide@decode_interval:decode_mode==0
+--hide@decode_interval:decode_mode==3
+local decode_seed = 0 --track@decode_seed:デコード::シード,-10000,10000,0,1
+--hide@decode_seed:decode_mode==0
+--hide@decode_seed:decode_mode==3
+local decode_color = nil --color@decode_color:デコード::色,nil
+--hide@decode_color:decode_mode==0
 --[[pixelshader@tint:
 --#include <tint.hlsl>
 ]]
@@ -152,6 +171,8 @@ do
     motion_overlap = motion_overlap * 0.01
     motion_softness = motion_softness * 0.01
     motion_selector_feather = motion_selector_feather * 0.01
+    motion_ease_high = motion_ease_high * 0.01
+    motion_ease_low = motion_ease_low * 0.01
 
     lyric_jitter = lyric_jitter * 0.01
     lyric_angle = rad(lyric_angle)
@@ -211,7 +232,7 @@ do
     local motion, mask
 
     do
-        local utf8 = obj.module("UTF8@${PROJECT_NAME}")
+        local utf8 = obj.module("UTF8@${MODULE}")
 
         local CACHE_LUT = "cache:a09d04ba-6a95-4940-b8f4-41f9d7483817-" .. ID
 
@@ -280,8 +301,16 @@ do
             end
         end
 
+        -- 文字のデコードの確定に使う。真の間は カーブ を通さず、進み具合をそのまま返す
+        -- （カーブが行き過ぎて戻る形でも、確定した文字が入れ替えに戻らないようにする）
+        local linear_progress = false
+
         local function interpolate(t)
             t = clamp(t, 0.0, 1.0)
+
+            if linear_progress then
+                return t
+            end
 
             local st = getvalue(0, 0.0)
             local range = getvalue(0, 0.0, -1) - st
@@ -289,8 +318,24 @@ do
             return abs(range) > eps and (getvalue(0, TOTALTIME * t) - st) / range or t
         end
 
+        -- AE の Ease High / Ease Low: 選択量 w（0〜1）の端の傾きを変える 3 次エルミート。
+        -- 0 側の傾き = 1 − イーズ低、1 側の傾き = 1 − イーズ高（どちらも 0 で直線＝従来どおり）。0〜1 の外の w はそのまま
+        local function ease_amount(w)
+            if w < 0.0 or w > 1.0 then
+                return w
+            end
+            local s0, s1 = 1.0 - motion_ease_low, 1.0 - motion_ease_high
+            if abs(s0 - 1.0) <= eps and abs(s1 - 1.0) <= eps then
+                return w
+            end
+            local w2 = w * w
+            local w3 = w2 * w
+            return clamp((w3 - 2.0 * w2 + w) * s0 + (3.0 * w2 - 2.0 * w3) + (w3 - w2) * s1, 0.0, 1.0)
+        end
+
         -- AE Selector Shape 相当: feather=0 なら従来どおり。feather で空間エンベロープを混ぜる。
         local function apply_selector_shape(w, unit_i, n)
+            w = ease_amount(w)
             local shape = motion_selector_shape
             local f = motion_selector_feather
             if f <= eps then
@@ -313,6 +358,12 @@ do
                 env = u
             elseif shape == 2 then
                 env = 1.0 - u
+            elseif shape == 4 then
+                -- 円形: 中央が 1 の半円
+                env = math.sqrt(max(0.0, 1.0 - (2.0 * u - 1.0) ^ 2))
+            elseif shape == 5 then
+                -- スムーズ: 中央が 1 の余弦の山
+                env = 0.5 - 0.5 * cos(2.0 * math.pi * u)
             else
                 env = 1.0 - abs(2.0 * u - 1.0)
             end
@@ -374,7 +425,7 @@ do
         local apply_xform
 
         do
-            local vector = obj.module("Vector@${PROJECT_NAME}")
+            local vector = obj.module("Vector@${MODULE}")
             local rotate = vector.rotate
 
             apply_xform = function(w)
@@ -425,10 +476,10 @@ do
             end
         end
 
-        local apply_lyric, apply_blink
+        local apply_lyric, apply_blink, apply_decode
 
         do
-            local hash = obj.module("Hash@${PROJECT_NAME}")
+            local hash = obj.module("Hash@${MODULE}")
             local hash4d = hash.hash4d
 
             if lyric_distance > eps then
@@ -611,6 +662,117 @@ do
                     end
                 end
             end
+
+            -- 文字のデコード。文字ごとに個別オブジェクトのテキストだけが対象（元の文字が分からないものは何もしない）
+            -- 元の文字は obj.index 番目の文字（制御文字を除く。上の「Shared count」と同じ数え方）
+            -- 検証器: AI/scripts/KineticType_H/verify_decode.py
+            if decode_mode > 0 and text ~= nil then
+                --#include "decode.lua"
+                local decode_utils = require("decode")
+                local scramble = decode_utils.scramble
+
+                local content = text:gsub("\\\\", "\\"):gsub("\\n", "\n"):gsub("<.->", "")
+                local chars = utf8.split(content, true)
+                local c = type(chars) == "table" and #chars or 0
+
+                local k
+                if NUM == c then
+                    k = INDEX
+                elseif c > 0 and NUM % c == 0 then
+                    k = floor(INDEX * c / NUM)
+                end
+
+                local orig = k ~= nil and chars[k + 1] or nil
+
+                if orig ~= nil then
+                    local function prop(name)
+                        local v = getvalue(LAYER, "テキスト", name)
+                        return v
+                    end
+
+                    local function truthy(v)
+                        return v == true or v == 1 or v == "1" or v == "true"
+                    end
+
+                    local styles = {
+                        ["標準文字"] = 0,
+                        ["影付き文字"] = 1,
+                        ["影付き文字(薄)"] = 2,
+                        ["縁取り文字"] = 3,
+                        ["縁取り文字(細)"] = 4,
+                        ["縁取り文字(太)"] = 5,
+                        ["縁取り文字(角)"] = 6,
+                    }
+
+                    -- 1 文字の画像なので、文字揃えは横書きか縦書きかだけを引き継ぐ（中心は copy_xform で元に戻す）
+                    local align = prop("文字揃え")
+                    local alignment = (type(align) == "string" and align:find("縦書", 1, true)) and 13 or 4
+
+                    local font = prop("フォント")
+                    if type(font) ~= "string" then
+                        font = ""
+                    end
+                    local size = to_number(prop("サイズ"), 0)
+                    if size <= 0 then
+                        size = max(obj.h, 1)
+                    end
+                    local style = to_style(prop("文字装飾"), styles)
+                    local color = decode_color ~= nil and to_color(decode_color, 0xffffff) or to_color(prop("文字色"), 0xffffff)
+                    local color2 = to_color(prop("影・縁色"), 0x000000)
+                    local bold, italic = truthy(prop("B")), truthy(prop("I"))
+                    local spacing, line_spacing = to_number(prop("字間"), 0), to_number(prop("行間"), 0)
+
+                    local pool
+                    if decode_mode == 2 then
+                        pool = (type(decode_pool) == "string" and decode_pool ~= "") and utf8.split(decode_pool, true) or {}
+                    end
+
+                    -- 間隔は 単位 に従う（フレーム / 秒）。1 フレーム未満は毎フレーム
+                    local interval = max(1, floor((unit == 0 and decode_interval or decode_interval * FPS) + 0.5))
+                    -- 文字ごとに入れ替わるフレームをずらす（全部の文字が同じフレームで変わらないように）
+                    local phase = min(interval - 1, floor(hash4d(INDEX, NUM, seed + 4, decode_seed) * interval))
+
+                    -- 点滅の文字も使っているときは、点滅のフォントを戻す
+                    local should_restore_font = apply_blink ~= nil and type(blink_characters_pool) == "string"
+                        and blink_characters_pool ~= ""
+
+                    -- lin: カーブを通さない選択量（確定の判定）、amt: カーブを通した選択量（オフセットの量）、time: 文字の時刻（秒）
+                    apply_decode = function(lin, amt, time)
+                        if lin <= eps then
+                            return
+                        end
+
+                        local ch
+                        if decode_mode == 3 then
+                            local off = floor(decode_offset * amt + 0.5)
+                            if off == 0 then
+                                return
+                            end
+                            ch = scramble(orig, 3, 0.0, nil, off)
+                        else
+                            local step = floor((floor(time * FPS + 0.5) + phase) / interval)
+                            local r = hash4d(INDEX, step, seed + 3, decode_seed)
+                            ch = scramble(orig, decode_mode, r, pool, 0)
+                        end
+
+                        if ch == nil then
+                            return
+                        end
+
+                        local xform = {}
+                        copy_xform(xform, obj)
+
+                        local saved = should_restore_font and { obj.getfont() } or nil
+                        obj.setfont(font, size, style, color, color2, bold, italic, spacing, line_spacing)
+                        obj.load("text", ch, 0.0, 0.0, alignment)
+                        if saved ~= nil then
+                            obj.setfont(unpack(saved))
+                        end
+
+                        copy_xform(obj, xform)
+                    end
+                end
+            end
         end
 
         local apply_fx
@@ -620,7 +782,7 @@ do
 
             local data
             if INDEX == 0 then
-                local toml = obj.module("Toml@${PROJECT_NAME}")
+                local toml = obj.module("Toml@${MODULE}")
 
                 data = { toml.parse("motion::effect", effect_params) }
                 global[KEY_FX] = buffer:reset():encode(data):get()
@@ -745,7 +907,7 @@ do
 
                     local t
                     if INDEX == 0 then
-                        local regex = obj.module("Regex@${PROJECT_NAME}")
+                        local regex = obj.module("Regex@${MODULE}")
 
                         t = {}
 
@@ -882,6 +1044,15 @@ do
 
             motion = function(dt, idx)
                 local t, w = progress(clamp(TIME + dt - offset, 0.0, TOTALTIME), ti, tn, i, n)
+
+                if apply_decode ~= nil then
+                    -- 上と同じ時刻・順位で、カーブを通さない選択量を求める
+                    local decode_t = clamp(TIME + dt - offset, 0.0, TOTALTIME)
+                    linear_progress = true
+                    local _, lw = progress(decode_t, ti, tn, i, n)
+                    linear_progress = false
+                    apply_decode(abs(lw), abs(w), TIME + dt)
+                end
 
                 apply_xform(w)
 

@@ -1,4 +1,4 @@
-//! トランスフォーム@FlowType_H（原作 Transform@FlowType_H）。原作 filters/intern/transform/intern/transform.cpp の移植。
+//! トランスフォーム@キネティックタイポ_H（原作 Transform@FlowType_K）。原作 filters/intern/transform/intern/transform.cpp の移植。
 //!
 //! ピボット・位置・回転・スケールを、オブジェクト自身の座標（ローカル空間）か、基準座標（ワールド空間）に
 //! 影響度の割合で足す。回転は四元数・軸角・オイラー角（6 通りの順序）で指定できる。
@@ -99,7 +99,7 @@ impl FilterPlugin for Transform {
 
     fn plugin_info(&self) -> FilterPluginTable {
         FilterPluginTable {
-            name: "トランスフォーム@FlowType_H".to_string(),
+            name: "トランスフォーム@キネティックタイポ_H".to_string(),
             label: Some(LABEL.to_string()),
             information: information("トランスフォーム"),
             flags: aviutl2::bitflag!(aviutl2::filter::FilterPluginFlags { video: true }),

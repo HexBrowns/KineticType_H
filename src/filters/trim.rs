@@ -1,4 +1,4 @@
-//! トリミング@FlowType_H（原作 Trim@FlowType_H）。原作 filters/intern/trim/intern/trim.cpp の移植。
+//! トリミング@キネティックタイポ_H（原作 Trim@FlowType_K）。原作 filters/intern/trim/intern/trim.cpp の移植。
 //!
 //! アルファがしきい値を超える画素の外接矩形に余白を足して切り抜き、アンカー（ピボットか位置）をその分ずらす。
 //! しきい値は原作どおり、0〜100 の値をそのままアルファ（0〜1、半精度）と比べる。
@@ -17,7 +17,7 @@ use super::{fail, information, stop, too_large_once, zeroed_bytes, zeros, LABEL}
 /// 大きさが上限を超えたとき。描かずに止め、ログは初回だけ出す
 fn too_large(video: &mut FilterProcVideo<()>, w: i64, h: i64) -> AnyResult<()> {
     static WARNED: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
-    too_large_once(&WARNED, "トリミング@FlowType_H", w, h);
+    too_large_once(&WARNED, "トリミング@キネティックタイポ_H", w, h);
     stop(video)
 }
 
@@ -70,7 +70,7 @@ impl FilterPlugin for Trim {
 
     fn plugin_info(&self) -> FilterPluginTable {
         FilterPluginTable {
-            name: "トリミング@FlowType_H".to_string(),
+            name: "トリミング@キネティックタイポ_H".to_string(),
             label: Some(LABEL.to_string()),
             information: information("トリミング"),
             flags: aviutl2::bitflag!(aviutl2::filter::FilterPluginFlags { video: true }),

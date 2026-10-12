@@ -1,30 +1,33 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""FlowType_H のスクリプト（`@FlowType_H.anm2`）だけを生成・検査・配置する。
+"""KineticType_H のスクリプト（`@キネティックタイポ_H.anm2`）だけを生成・検査・配置する。
 
-    python AI/plugins/FlowType_H/build_scripts.py                    # 生成 → 検査 → 配置
-    python AI/plugins/FlowType_H/build_scripts.py --no-deploy        # 生成と検査だけ
-    python AI/plugins/FlowType_H/build_scripts.py --no-deploy --expect-identical
+    python AI/plugins/KineticType_H/build_scripts.py                    # 生成 → 検査 → 配置
+    python AI/plugins/KineticType_H/build_scripts.py --no-deploy        # 生成と検査だけ
+    python AI/plugins/KineticType_H/build_scripts.py --no-deploy --expect-identical
                                                                      # 配置済みとバイト一致を確かめる
 
 Korarei 氏の astra（**0.7.1 以降**。色の初期値 `nil` を通すのは 0.7.1 から。`astra.exe`、設定形式 version 2）の
 `astra build effect --release` を呼ぶ。`astra.toml` にはスクリプトのビルドだけを書いてある。
 
-**`Script/FlowType_H/@FlowType_H.anm2` は生成物。直接編集しない。**
+**`Script/KineticType_H/@キネティックタイポ_H.anm2` は生成物。直接編集しない。**
+スクリプトの名前（ファイル名と効果名の `@` の後ろ）は `astra.toml` の `[project] name` で決まる
+（v0.3.x までは FlowType_H。2026-10-12 に改名した）。
 正本は `scripts/effects/*.lua`（`motion.lua` ほか。`#include` される `utilities.lua` など）。
 
 手順
 ----
 
-1. `build/effect/release/@FlowType_H.anm2` へ生成する（`build/` は `.gitignore` 対象。
-   同じ場所に出る多言語化のひな形 `Default.FlowType_H.aul2` は使わない）
-2. 形を検査する: UTF-8 BOM 無し、先頭が `@モーション`、セクションが astra.toml の targets と同数
+1. `build/effect/release/@キネティックタイポ_H.anm2` へ生成する（`build/` は `.gitignore` 対象。
+   同じ場所に出る多言語化のひな形 `Default.キネティックタイポ_H.aul2` は使わない）
+2. 形を検査する: UTF-8 BOM 無し、先頭が `@モーション`、セクションが astra.toml の targets と同数。
+   `presets/*.preset` のファイル名と `effect.name=` が、今の名前の効果（`<セクション>@<name>`）を指すこと
 3. `AI/tools/check_lua_syntax.py` に通す（マルチセクションをセクション単位で luaJIT に読ませる）
 4. 配置済みと比べる（一致 / 相違を出す。`--expect-identical` なら相違で終了コード 1）
 5. 配置する（`--no-deploy` で省略）
-   - `Script/FlowType_H/@FlowType_H.anm2`
+   - `Script/KineticType_H/@キネティックタイポ_H.anm2`
    - `Preset/` へ `presets/*.preset`
-   - `Script/FlowType_H/` へ `*.md` と `LICENSE`（aviutl2.toml の artifacts と同じ）
+   - `Script/KineticType_H/` へ `*.md` と `LICENSE`（aviutl2.toml の artifacts と同じ）
    配置後に読み戻してバイト一致を確かめる
 
 UI 定義（`--track@` `--select@` など）を変えたときは、配置しても
@@ -42,13 +45,16 @@ import sys
 import tomllib
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent                   # AI/plugins/FlowType_H
+HERE = Path(__file__).resolve().parent                   # AI/plugins/KineticType_H
 ROOT = HERE.parents[2]                                   # C:\ProgramData\aviutl2
 BUILD_ID = "effect"
-OUTPUT = HERE / "build" / BUILD_ID / "release" / "@FlowType_H.anm2"
+with open(HERE / "astra.toml", "rb") as _f:
+    SCRIPT_NAME = tomllib.load(_f)["project"]["name"]    # キネティックタイポ_H
+SCRIPT_FILE = "@%s.anm2" % SCRIPT_NAME
+OUTPUT = HERE / "build" / BUILD_ID / "release" / SCRIPT_FILE
 ASTRA_MIN = (0, 7, 1)
-DEPLOY_SCRIPT = ROOT / "Script" / "FlowType_H" / "@FlowType_H.anm2"
-DEPLOY_DOC_DIR = ROOT / "Script" / "FlowType_H"
+DEPLOY_DOC_DIR = ROOT / "Script" / HERE.name             # Script/KineticType_H（拠点のフォルダ名と同じ）
+DEPLOY_SCRIPT = DEPLOY_DOC_DIR / SCRIPT_FILE
 DEPLOY_PRESET_DIR = ROOT / "Preset"
 CHECK_SYNTAX = ROOT / "AI" / "tools" / "check_lua_syntax.py"
 DOCS = ("CHANGELOG.md", "README.md", "THIRD_PARTY_LICENSES.md", "LICENSE")
@@ -122,6 +128,33 @@ def check_shape(path, expected_sections):
     return ok
 
 
+def check_presets(sections):
+    """presets/*.preset が今の名前の効果を指しているかを確かめる（改名の取り残しを止める）。
+
+    ファイル名は `<セクション>@<name>.<…>.preset`、中身の `effect.name=` は `<セクション>@<name>` で、
+    セクションは生成したスクリプトにあるもの。旧名（`@FlowType_H`）のままのプリセットを配ると、
+    本体はその効果を見つけられない（どう扱われるかは実機で確かめていない）。
+    """
+    presets = sorted((HERE / "presets").glob("*.preset"))
+    if not presets:
+        say("[ERROR] presets/*.preset が 0 件")
+        return False
+    ok = True
+    for p in presets:
+        head = p.name.split(".", 1)[0]                   # モーション@キネティックタイポ_H
+        section, _, script = head.partition("@")
+        if script != SCRIPT_NAME or ("@" + section) not in sections:
+            say("[ERROR] プリセットのファイル名が今の効果を指していない: %s" % p.name)
+            ok = False
+        names = re.findall(r"^effect\.name=(.*)$", p.read_text(encoding="utf-8"), re.M)
+        if names != [head]:
+            say("[ERROR] %s の effect.name が %s（期待 %s）" % (p.name, names, head))
+            ok = False
+    if ok:
+        say("[INFO] プリセット %d 件の効果名を確かめた" % len(presets))
+    return ok
+
+
 def check_syntax(path):
     rc = subprocess.call([sys.executable, str(CHECK_SYNTAX), str(path)])
     if rc != 0:
@@ -184,6 +217,8 @@ def main():
     say("[INFO] 生成: %s" % generated)
 
     ok = check_shape(generated, expected_sections)
+    sections = [ln for ln in generated.read_text(encoding="utf-8").splitlines() if ln.startswith("@")]
+    ok = check_presets(sections) and ok
     ok = check_syntax(generated) and ok
     if not ok:
         say("[ERROR] 検査で落ちたので配置しない")

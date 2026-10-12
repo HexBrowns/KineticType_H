@@ -11,7 +11,7 @@ pub mod trim;
 pub const LABEL: &str = "HexScript";
 
 pub fn information(name: &str) -> String {
-    format!("{name}@FlowType_H v{} by HexBrowns (fork of FlowType_K by Korarei)", env!("CARGO_PKG_VERSION"))
+    format!("{name}@キネティックタイポ_H v{} by HexBrowns (fork of FlowType_K by Korarei)", env!("CARGO_PKG_VERSION"))
 }
 
 /// 原作の `return false`（以降のフィルタと出力を止める）に当たる戻し方。エラーのログは出さない。

@@ -1,4 +1,4 @@
-// トリミング@FlowType_H。原作 plugins/filters/intern/trim/intern/shaders/blit.hlsl の写し（変えていない）
+// トリミング@キネティックタイポ_H。原作 plugins/filters/intern/trim/intern/shaders/blit.hlsl の写し（変えていない）
 Texture2D tex : register(t0);
 cbuffer params : register(b0) {
     int2 origin;

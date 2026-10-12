@@ -1,4 +1,4 @@
-//! `Toml@FlowType_H`。原作 modules/intern/toml/intern/toml.cpp の移植。
+//! `Toml@KineticType_H`。原作 modules/intern/toml/intern/toml.cpp の移植。
 //!
 //! モーションの「エフェクト::パラメータ」に書いた TOML を、表ごとに {効果名, {項目名 = 値}} の並びで返す。
 //! 原作の toml++ の表はキーの辞書順に回る。toml クレートの表（BTreeMap）も同じ順になる。

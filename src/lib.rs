@@ -1,9 +1,9 @@
-//! FlowType_H — FlowType_K（Korarei、MIT）の C++ プラグイン（FlowType_H.aux2）の Rust フォーク。
+//! KineticType_H（v0.3.x までの名前は FlowType_H）— FlowType_K（Korarei、MIT）の C++ プラグインの Rust フォーク。
 //!
 //! 原作のソースは `plugins/`（C++、vcpkg が要る）に残してあり、ビルドしない。中身は次の 3 つで、すべて移植した。
 //!
 //! - フィルタ効果 4 つ（filters/）。効果名は日本語にした（トリミング / 変形 / 整列 / トランスフォーム）
-//! - スクリプトモジュール 7 つ（modules/）。名前は原作と同じ（`UTF8@FlowType_H` など。スクリプトがこの名前で読む）
+//! - スクリプトモジュール 7 つ（modules/）。名前は `UTF8@KineticType_H` など（スクリプトがこの名前で読む。astra.toml の MODULE と揃える）
 //! - メニュー（menus/）。オブジェクトのメニュー 1 つと、設定項目のメニュー 13 個
 //!
 //! 原作は行ごとの処理を並列にしていた（std::execution::par）。こちらはスレッドを起こさない
@@ -25,7 +25,7 @@ use aviutl2::AnyResult;
 pub static EDIT_HANDLE: GlobalEditHandle = GlobalEditHandle::new();
 
 #[aviutl2::plugin(GenericPlugin)]
-pub struct FlowTypeH {
+pub struct KineticTypeH {
     trim: SubPlugin<filters::trim::Trim>,
     deform: SubPlugin<filters::deform::Deform>,
     align: SubPlugin<filters::align::Align>,
@@ -39,7 +39,7 @@ pub struct FlowTypeH {
     island: SubPlugin<modules::island::IslandModule>,
 }
 
-impl aviutl2::generic::GenericPlugin for FlowTypeH {
+impl aviutl2::generic::GenericPlugin for KineticTypeH {
     fn new(info: aviutl2::AviUtl2Info) -> AnyResult<Self> {
         aviutl2::tracing_subscriber::fmt()
             .with_max_level(tracing::Level::INFO)
@@ -63,9 +63,9 @@ impl aviutl2::generic::GenericPlugin for FlowTypeH {
 
     fn plugin_info(&self) -> aviutl2::generic::GenericPluginTable {
         aviutl2::generic::GenericPluginTable {
-            name: "FlowType_H".to_string(),
+            name: "KineticType_H".to_string(),
             information: format!(
-                "FlowType_H v{} by HexBrowns (fork of FlowType_K by Korarei)",
+                "KineticType_H v{} by HexBrowns (fork of FlowType_K by Korarei)",
                 env!("CARGO_PKG_VERSION")
             ),
         }
@@ -79,13 +79,13 @@ impl aviutl2::generic::GenericPlugin for FlowTypeH {
         registry.register_filter_plugin(&self.transform);
         registry.register_filter_plugin(&self.trim);
 
-        registry.register_script_module(Some("Hash@FlowType_H"), &self.hash);
-        registry.register_script_module(Some("Island@FlowType_H"), &self.island);
-        registry.register_script_module(Some("Kerning@FlowType_H"), &self.kerning);
-        registry.register_script_module(Some("Regex@FlowType_H"), &self.regex);
-        registry.register_script_module(Some("UTF8@FlowType_H"), &self.utf8);
-        registry.register_script_module(Some("Toml@FlowType_H"), &self.toml);
-        registry.register_script_module(Some("Vector@FlowType_H"), &self.vector);
+        registry.register_script_module(Some("Hash@KineticType_H"), &self.hash);
+        registry.register_script_module(Some("Island@KineticType_H"), &self.island);
+        registry.register_script_module(Some("Kerning@KineticType_H"), &self.kerning);
+        registry.register_script_module(Some("Regex@KineticType_H"), &self.regex);
+        registry.register_script_module(Some("UTF8@KineticType_H"), &self.utf8);
+        registry.register_script_module(Some("Toml@KineticType_H"), &self.toml);
+        registry.register_script_module(Some("Vector@KineticType_H"), &self.vector);
 
         EDIT_HANDLE.init(registry.create_edit_handle());
         menus::register(registry);
@@ -97,7 +97,7 @@ impl aviutl2::generic::GenericPlugin for FlowTypeH {
     }
 }
 
-impl Drop for FlowTypeH {
+impl Drop for KineticTypeH {
     fn drop(&mut self) {
         modules::clear_cache();
         font::deinit();
@@ -106,4 +106,4 @@ impl Drop for FlowTypeH {
 
 // 本体が呼ぶ関数（GetCommonPluginTable / RegisterPlugin など）を書き出す。これが無いと読み込みで
 // 「Failed to register common plugin. GetProcAddress() failed.」になる（ルール au2-rs-plugin「ビルド」）
-aviutl2::register_generic_plugin!(FlowTypeH);
+aviutl2::register_generic_plugin!(KineticTypeH);

@@ -1,22 +1,26 @@
-# スクリプト（@FlowType_H.anm2）の生成だけに使う（astra 0.7.1 以降。設定形式 version 2）。
+# スクリプト（@キネティックタイポ_H.anm2）の生成だけに使う（astra 0.7.1 以降。設定形式 version 2）。
 #   python build_scripts.py   astra build effect --release → 検査 → 配置
-# プラグイン（.aux2）と配布物（au2pkg）は aviutl2.toml / build.ps1 の担当なので、ここには書かない。
+# プラグイン（.aux2）と配布物（au2pkg）は aviutl2.toml の担当なので、ここには書かない。
 version = 2
 
 [astra]
 requires_astra = ">=0.7.0"
 
+# name がスクリプトのファイル名と効果名（モーション@キネティックタイポ_H など）、シェーダーの登録名になる。
+# 作者は原作者（Korarei）のまま。v0.3.x までの名前は FlowType_H（2026-10-12 に改名）。
 [project]
-name = "FlowType_H"
-version = "0.3.0"
+name = "キネティックタイポ_H"
+version = "0.4.0"
 authors = ["Korarei"]
 requires_aviutl2 = "2011100"
 
-# 出力: build/effect/release/@FlowType_H.anm2（見出しは各ソースの先頭行 --@モーション などから作られる）
+# 出力: build/effect/release/@キネティックタイポ_H.anm2（見出しは各ソースの先頭行 --@モーション などから作られる）
+# MODULE はプラグイン（KineticType_H.aux2）が登録するスクリプトモジュールの名前の後半（UTF8@KineticType_H など）。
+# src/lib.rs の register_script_module の名前と揃える。
 [builds.effect]
 suffix = ".anm2"
 include_dirs = ["scripts/effects/shaders"]
-vars = { LABEL = "HexScript" }
+vars = { LABEL = "HexScript", MODULE = "KineticType_H" }
 targets = [
     { path = "scripts/effects/motion.lua" },
     { path = "scripts/effects/island.lua" },

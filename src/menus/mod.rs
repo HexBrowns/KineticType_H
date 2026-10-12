@@ -33,41 +33,41 @@ pub fn register(host: &mut HostAppHandle) {
     use expression::Scope;
     use value::Range;
 
-    host.register_object_menu("FlowType_H\\テキストを文字ごとに分解", text_split::run);
+    host.register_object_menu("KineticType_H\\テキストを文字ごとに分解", text_split::run);
 
     for (name, range) in [
-        ("FlowType_H\\現在値で上書き\\全ての区間", Range::All),
-        ("FlowType_H\\現在値で上書き\\以前の区間", Range::Preceding),
-        ("FlowType_H\\現在値で上書き\\以降の区間", Range::Subsequent),
+        ("KineticType_H\\現在値で上書き\\全ての区間", Range::All),
+        ("KineticType_H\\現在値で上書き\\以前の区間", Range::Preceding),
+        ("KineticType_H\\現在値で上書き\\以降の区間", Range::Subsequent),
     ] {
         host.register_object_item_menu(name, move |h, effect, index, item| value::overwrite(range, h, effect, index, item));
     }
     for (name, range) in [
-        ("FlowType_H\\値を反転\\現在の区間", Range::Current),
-        ("FlowType_H\\値を反転\\全ての区間", Range::All),
-        ("FlowType_H\\値を反転\\以前の区間", Range::Preceding),
-        ("FlowType_H\\値を反転\\以降の区間", Range::Subsequent),
+        ("KineticType_H\\値を反転\\現在の区間", Range::Current),
+        ("KineticType_H\\値を反転\\全ての区間", Range::All),
+        ("KineticType_H\\値を反転\\以前の区間", Range::Preceding),
+        ("KineticType_H\\値を反転\\以降の区間", Range::Subsequent),
     ] {
         host.register_object_item_menu(name, move |h, effect, index, item| value::invert(range, h, effect, index, item));
     }
 
     for (name, scope) in [
-        ("FlowType_H\\プロパティ名をコピー\\{プロパティ名}", Scope::Local),
-        ("FlowType_H\\プロパティ名をコピー\\{エフェクト名}.{プロパティ名}", Scope::Object),
-        ("FlowType_H\\プロパティ名をコピー\\{レイヤー名}.{エフェクト名}.{プロパティ名}", Scope::Global),
+        ("KineticType_H\\プロパティ名をコピー\\{プロパティ名}", Scope::Local),
+        ("KineticType_H\\プロパティ名をコピー\\{エフェクト名}.{プロパティ名}", Scope::Object),
+        ("KineticType_H\\プロパティ名をコピー\\{レイヤー名}.{エフェクト名}.{プロパティ名}", Scope::Global),
     ] {
         host.register_object_item_menu(name, move |h, effect, index, item| {
             expression::copy_prop_name(scope, h, effect, index, item)
         });
     }
-    host.register_object_item_menu("FlowType_H\\参照式をコピー", expression::copy_expression);
+    host.register_object_item_menu("KineticType_H\\参照式をコピー", expression::copy_expression);
 
     host.register_object_item_and_effect_menu(
-        "FlowType_H\\エフェクトをコピー\\エイリアス形式 (INI 形式)",
+        "KineticType_H\\エフェクトをコピー\\エイリアス形式 (INI 形式)",
         |h, effect, index, _item| effect::copy(effect::Format::Ini, h, effect, index),
     );
     host.register_object_item_and_effect_menu(
-        "FlowType_H\\エフェクトをコピー\\FlowType_H 形式 (TOML 形式)",
+        "KineticType_H\\エフェクトをコピー\\KineticType_H 形式 (TOML 形式)",
         |h, effect, index, _item| effect::copy(effect::Format::Toml, h, effect, index),
     );
 }

@@ -1,7 +1,7 @@
-//! `Kerning@FlowType_H`。原作 modules/intern/text/intern/kerning.cpp の移植。
+//! `Kerning@KineticType_H`。原作 modules/intern/text/intern/kerning.cpp の移植。
 //!
 //! テキストを HarfBuzz で組み、1 文字ごとに「組んだ位置 − 字送りだけで並べた位置」を返す
-//! （カーニング@FlowType_H がこのずれを各文字に足す）。合字は切り、プロポーショナル字幅とカーニングを入れる。
+//! （カーニング@キネティックタイポ_H がこのずれを各文字に足す）。合字は切り、プロポーショナル字幅とカーニングを入れる。
 
 use harfbuzz_sys as hb;
 
@@ -178,6 +178,6 @@ mod tests {
     #[test]
     fn missing_font_is_none() {
         font::init(std::path::Path::new("Z:/__no_such_dir__"));
-        assert!(font::load("__FlowType_H_no_such_font__", false, false).unwrap().is_none());
+        assert!(font::load("__KineticType_H_no_such_font__", false, false).unwrap().is_none());
     }
 }

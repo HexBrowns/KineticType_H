@@ -1,4 +1,4 @@
-//! `Regex@FlowType_H`。原作 modules/intern/text/intern/regex.cpp の移植。
+//! `Regex@KineticType_H`。原作 modules/intern/text/intern/regex.cpp の移植。
 //!
 //! 原作は RE2（UTF-8・先頭一致優先）。こちらは regex クレートの bytes 版で、同じく UTF-8 として読む。
 //! どちらも後方参照や先読みを持たず、構文はほぼ同じ。`Match(text, pos, …)` と同じく、検索の開始位置を

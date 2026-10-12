@@ -1,10 +1,10 @@
 # Third Party Licenses
 
-FlowType_H（プラグイン `FlowType_H.aux2` とスクリプト `@FlowType_H.anm2`）に含まれる、原作 FlowType_K（Korarei、MIT。[LICENSE](./LICENSE)）以外の第三者のコードとそのライセンス。
+KineticType_H（旧 FlowType_H。プラグイン `KineticType_H.aux2` とスクリプト `@キネティックタイポ_H.anm2`）に含まれる、原作 FlowType_K（Korarei、MIT。[LICENSE](./LICENSE)）以外の第三者のコードとそのライセンス。
 
 Rust の依存クレート（aviutl2-rs・harfbuzz-sys・regex・toml・windows など）のライセンスは [THIRD_PARTY_CRATES.md](./THIRD_PARTY_CRATES.md) にまとめている。
 
-| 名前 | ライセンス | FlowType_H での使われ方 |
+| 名前 | ライセンス | KineticType_H での使われ方 |
 |---|---|---|
 | AviUtl ExEdit2 Plugin SDK | MIT | aviutl2-sys（aviutl2-rs）が SDK のヘッダーを Rust に移植したもの。aviutl2-sys の LICENSE には載っていないのでここに載せる |
 | Eigen | MPL-2.0 | `src/rotation.rs` が Eigen 5.0.1 の回転の計算（`Quaternion::slerp` など）の式を写している。このファイルだけ MPL-2.0 で、ソースはこのリポジトリの `src/rotation.rs` |

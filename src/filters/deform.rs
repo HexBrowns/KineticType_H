@@ -1,4 +1,4 @@
-//! 変形@FlowType_H（原作 Deform@FlowType_H）。原作 filters/intern/deform/intern/deform.cpp の移植。
+//! 変形@キネティックタイポ_H（原作 Deform@FlowType_K）。原作 filters/intern/deform/intern/deform.cpp の移植。
 //!
 //! 画像を 2D のアフィン変換（位置・回転・せん断・スケール・ピボット）で描き直す。計算は原作と同じく単精度で、
 //! Eigen の `Transform::translate / rotate / scale` は右から掛ける。
@@ -14,7 +14,7 @@ use super::{fail, information, stop, too_large_once, zeros, LABEL};
 /// 変形後の大きさが上限を超えたとき。描かずに止め、ログは初回だけ出す
 fn too_large(video: &mut FilterProcVideo<()>, w: i64, h: i64) -> AnyResult<()> {
     static WARNED: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
-    too_large_once(&WARNED, "変形@FlowType_H", w, h);
+    too_large_once(&WARNED, "変形@キネティックタイポ_H", w, h);
     stop(video)
 }
 use crate::rotation::to_rad;
@@ -78,7 +78,7 @@ impl FilterPlugin for Deform {
 
     fn plugin_info(&self) -> FilterPluginTable {
         FilterPluginTable {
-            name: "変形@FlowType_H".to_string(),
+            name: "変形@キネティックタイポ_H".to_string(),
             label: Some(LABEL.to_string()),
             information: information("変形"),
             flags: aviutl2::bitflag!(aviutl2::filter::FilterPluginFlags { video: true }),

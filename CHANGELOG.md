@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.4.0 (KineticType_H local)
+
+> [!CAUTION]
+> 名前を `FlowType_H` から `KineticType_H` に変えた．**効果名が変わるので，v0.3.x までで保存したプロジェクトの効果は，そのままでは読み込めない**（README の「旧名（FlowType_H）からの移行」）．
+
+- プラグイン: `Plugin/FlowType_H/FlowType_H.aux2` → `Plugin/KineticType_H/KineticType_H.aux2`．パッケージの ID も `HexBrowns.FlowType_H` → `HexBrowns.KineticType_H`
+- スクリプト: `Script/FlowType_H/@FlowType_H.anm2` → `Script/KineticType_H/@キネティックタイポ_H.anm2`．効果名は `モーション@キネティックタイポ_H` など（`@` の前のセクション名と，設定項目の名前は変えていない）
+- プラグインのフィルタ: `トリミング@FlowType_H` / `変形@FlowType_H` / `整列@FlowType_H` / `トランスフォーム@FlowType_H` → `*@キネティックタイポ_H`
+- スクリプトモジュール: `UTF8@FlowType_H` など 7 つ → `UTF8@KineticType_H` など
+- メニュー: `FlowType_H\…` → `KineticType_H\…`．「エフェクトをコピー」の形式名も `KineticType_H 形式 (TOML 形式)` にした
+- 同梱プリセット: `モーション@キネティックタイポ_H.Factory.Lyric` / `Stretch`
+- 原作 FlowType_K（Korarei，MIT）のフォークであることと，著作権表示・ライセンスは変えていない．スクリプトの `--information:` の作者も原作者のまま
+
 ## v0.3.2 (FlowType_H local)
 
 - メニューの「テキストを文字ごとに分解」で，元のテキストを消す前に，内側のグループ制御と各文字が入るレイヤーの同じ範囲が空いているかを確かめるようにした．ふさがっていれば何も消さずにエラーにする（どのレイヤーのどの範囲かを出す）

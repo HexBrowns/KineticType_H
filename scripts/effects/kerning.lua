@@ -97,7 +97,7 @@ do
 
     local c
     if INDEX == 0 then
-        local utf8 = obj.module("UTF8@${PROJECT_NAME}")
+        local utf8 = obj.module("UTF8@${MODULE}")
 
         c = utf8.count(content, true)
         global[KEY_COUNT] = tostring(c)
@@ -124,7 +124,7 @@ do
 
         local t
         if INDEX == 0 then
-            local kerning = obj.module("Kerning@${PROJECT_NAME}")
+            local kerning = obj.module("Kerning@${MODULE}")
 
             local alignments = {
                 ["左寄せ[上]"] = 0,
@@ -180,7 +180,7 @@ do
 
         local t = {}
         if INDEX == 0 then
-            local regex = obj.module("Regex@${PROJECT_NAME}")
+            local regex = obj.module("Regex@${MODULE}")
 
             for _, m in ipairs({ regex.mark(ID, content, filter_regex_pattern, filter_capture_group) }) do
                 if not m[2] then
@@ -204,7 +204,7 @@ do
     end
 
     if is_matched then
-        local vector = obj.module("Vector@${PROJECT_NAME}")
+        local vector = obj.module("Vector@${MODULE}")
         local rotate = vector.rotate
 
         if xform_target_world_space then

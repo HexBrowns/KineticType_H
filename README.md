@@ -1,10 +1,8 @@
-# FlowType_H
+# KineticType_H
 
-<img src="images/FlowType_H_thumbnail.gif" width="360">
-
-![GitHub License](https://img.shields.io/github/license/HexBrowns/FlowType_H)
-![GitHub Last commit](https://img.shields.io/github/last-commit/HexBrowns/FlowType_H)
-![GitHub Downloads](https://img.shields.io/github/downloads/HexBrowns/FlowType_H/total)
+![GitHub License](https://img.shields.io/github/license/HexBrowns/KineticType_H)
+![GitHub Last commit](https://img.shields.io/github/last-commit/HexBrowns/KineticType_H)
+![GitHub Downloads](https://img.shields.io/github/downloads/HexBrowns/KineticType_H/total)
 [![GitHub Release][releases-badge]][releases-url]
 
 AviUtl ExEdit2 向けテキストアニメーション作成支援ツール．
@@ -13,13 +11,13 @@ AviUtl ExEdit2 向けテキストアニメーション作成支援ツール．
 
 Korarei 氏の [FlowType_K](https://github.com/korarei/AviUtl2_FlowType_K_Script)（MIT）のフォーク．原作の機能はすべて残したうえで，次の点を変えている（詳しくは [CHANGELOG](./CHANGELOG.md)）．
 
-- 名前を `*@FlowType_H` にした．効果名・設定項目名・選択肢を日本語にした（効果名は v0.3.0 から．v0.2.1 までで保存したプロジェクトの FlowType_H の効果は読み込めない）
-- プラグイン（`FlowType_H.aux2`）を C++ から Rust（[aviutl2-rs](https://github.com/sevenc-nanashi/aviutl2-rs)）に書き直した．計算は原作と同じ式で，文字の組みは HarfBuzz，正規表現は RE2 の代わりに Rust の regex クレートを使う
+- 名前を `KineticType_H`（スクリプトは `@キネティックタイポ_H.anm2`，効果名は `*@キネティックタイポ_H`）にした（v0.4.0 から．v0.3.x までは `FlowType_H`．下の「旧名（FlowType_H）からの移行」）．効果名・設定項目名・選択肢を日本語にした（効果名は v0.3.0 から．v0.2.1 までで保存したプロジェクトの効果は読み込めない）
+- プラグイン（`KineticType_H.aux2`）を C++ から Rust（[aviutl2-rs](https://github.com/sevenc-nanashi/aviutl2-rs)）に書き直した．計算は原作と同じ式で，文字の組みは HarfBuzz，正規表現は RE2 の代わりに Rust の regex クレートを使う
 - `単語` 単位の分け方（単語分割）に「強化（句読点・文字種）」と「文節（簡易）」を足した（形態素解析ではない）
 - `モーション` に選択形状・選択フェザーを，`モーション` / `パーツ分解` / `リピート` の順序に「中央から」「外側から」を足した
 - 原作の修正（退場モーション，極端な伸縮での GPU デバイス喪失）を移植した．原作にある不具合のうち，`パーツ分解` のカスタム順序の取り違えと，「エフェクトをコピー」が対象の効果を見つけられないと止まらなくなる問題を直した
 
-FlowType_H の不具合は原作ではなく，このリポジトリの [Issues](https://github.com/HexBrowns/FlowType_H/issues) へ報告してほしい．
+KineticType_H の不具合は原作ではなく，このリポジトリの [Issues](https://github.com/HexBrowns/KineticType_H/issues) へ報告してほしい．
 
 ## 機能
 
@@ -27,29 +25,29 @@ FlowType_H の不具合は原作ではなく，このリポジトリの [Issues]
 
 アニメーション効果
 
-- HexScript\\モーション@FlowType_H: 全自動リリックモーション
-- HexScript\\パーツ分解@FlowType_H: パーツ分解
-- HexScript\\カーニング@FlowType_H: 全自動カーニング
-- HexScript\\リピート@FlowType_H: 高機能画像ループ
-- HexScript\\トリミング@FlowType_H: 余白除去
-- HexScript\\変形@FlowType_H: 変形
-- HexScript\\整列@FlowType_H: 整列
-- HexScript\\トランスフォーム@FlowType_H: 座標変換
-- HexScript\\点滅@FlowType_H: 点滅
-- HexScript\\残像@FlowType_H: 残像
+- HexScript\\モーション@キネティックタイポ_H: 全自動リリックモーション
+- HexScript\\パーツ分解@キネティックタイポ_H: パーツ分解
+- HexScript\\カーニング@キネティックタイポ_H: 全自動カーニング
+- HexScript\\リピート@キネティックタイポ_H: 高機能画像ループ
+- HexScript\\トリミング@キネティックタイポ_H: 余白除去
+- HexScript\\変形@キネティックタイポ_H: 変形
+- HexScript\\整列@キネティックタイポ_H: 整列
+- HexScript\\トランスフォーム@キネティックタイポ_H: 座標変換
+- HexScript\\点滅@キネティックタイポ_H: 点滅
+- HexScript\\残像@キネティックタイポ_H: 残像
 
 オブジェクトメニュー (オブジェクトを右クリック)
 
-- FlowType_H\\テキストを文字ごとに分解: テキスト分解
+- KineticType_H\\テキストを文字ごとに分解: テキスト分解
 
 プロパティメニュー (オブジェクト設定項目を右クリック)
 
-- FlowType_H\\現在値で上書き: 現在値を指定した区間にコピー
-- FlowType_H\\値を反転: 指定した区間の値を反転 (符号，ON/Off)
-- FlowType_H\\プロパティ名をコピー: 指定した形式でプロパティ名をクリップボードへコピー
-- FlowType_H\\参照式をコピー: 参照式をクリップボードへコピー
+- KineticType_H\\現在値で上書き: 現在値を指定した区間にコピー
+- KineticType_H\\値を反転: 指定した区間の値を反転 (符号，ON/Off)
+- KineticType_H\\プロパティ名をコピー: 指定した形式でプロパティ名をクリップボードへコピー
+- KineticType_H\\参照式をコピー: 参照式をクリップボードへコピー
 
-- FlowType_H\\エフェクトをコピー: 指定した形式でエフェクト情報をクリップボードへコピー
+- KineticType_H\\エフェクトをコピー: 指定した形式でエフェクト情報をクリップボードへコピー
 
 ## 動作確認
 
@@ -70,20 +68,27 @@ FlowType_H の不具合は原作ではなく，このリポジトリの [Issues]
 zip の中身は次のとおり．
 
 ```
-Plugin/FlowType_H/FlowType_H.aux2   プラグイン（フィルタ 4 つ・スクリプトモジュール・メニュー）
-Script/FlowType_H/@FlowType_H.anm2  スクリプト（アニメーション効果 6 つ）と文書
-Preset/*@FlowType_H.*.preset        同梱プリセット
+Plugin/KineticType_H/KineticType_H.aux2        プラグイン（フィルタ 4 つ・スクリプトモジュール・メニュー）
+Script/KineticType_H/@キネティックタイポ_H.anm2  スクリプト（アニメーション効果 6 つ）と文書
+Preset/*@キネティックタイポ_H.*.preset      同梱プリセット
 ```
 
-スクリプトはプラグインのスクリプトモジュール（`UTF8@FlowType_H` など）を使うので，スクリプトだけを置いても動かない．
+スクリプトはプラグインのスクリプトモジュール（`UTF8@KineticType_H` など）を使うので，スクリプトだけを置いても動かない．
 
 ### 削除
 
-AviUtl2 を終了してから，`Plugin/FlowType_H/` と `Script/FlowType_H/` のフォルダ，`Preset/` の `*@FlowType_H.*.preset` を消す．
+AviUtl2 を終了してから，`Plugin/KineticType_H/` と `Script/KineticType_H/` のフォルダ，`Preset/` の `*@キネティックタイポ_H.*.preset` を消す．
+
+### 旧名（FlowType_H）からの移行
+
+v0.4.0 で名前を `FlowType_H` から `KineticType_H`（スクリプトは `@キネティックタイポ_H.anm2`）に変えた．効果名が `*@FlowType_H` から `*@キネティックタイポ_H` に変わったので，**v0.3.x までで保存したプロジェクトの効果は，そのままでは読み込めない**．
+
+1. AviUtl2 を終了して，旧版の `Plugin/FlowType_H/` と `Script/FlowType_H/` のフォルダ，`Preset/` の `*@FlowType_H.*.preset` を消す
+2. 旧版で作ったプロジェクトを使い続けるなら，`.aup2` をテキストエディタで開き，`effect.name=` の行の `@FlowType_H` を `@キネティックタイポ_H` に置き換えて別名で保存する（例: `effect.name=モーション@FlowType_H` → `effect.name=モーション@キネティックタイポ_H`．テキストの本文などほかの行は変えない）．設定項目の名前は変えていないので，値はそのまま読める
 
 ## 使い方
 
-### モーション@FlowType_H
+### モーション@キネティックタイポ_H
 
 初期ラベル: `HexScript`
 
@@ -252,7 +257,7 @@ AviUtl2 を終了してから，`Plugin/FlowType_H/` と `Script/FlowType_H/` �
 
   </details>
 
-### パーツ分解@FlowType_H
+### パーツ分解@キネティックタイポ_H
 
 初期ラベル: `HexScript`
 
@@ -333,7 +338,7 @@ AviUtl2 を終了してから，`Plugin/FlowType_H/` と `Script/FlowType_H/` �
 
   </details>
 
-### カーニング@FlowType_H
+### カーニング@キネティックタイポ_H
 
 初期ラベル: `HexScript`
 
@@ -386,7 +391,7 @@ AviUtl2 を終了してから，`Plugin/FlowType_H/` と `Script/FlowType_H/` �
 
   </details>
 
-### リピート@FlowType_H
+### リピート@キネティックタイポ_H
 
 初期ラベル: `HexScript`
 
@@ -437,7 +442,7 @@ AviUtl2 を終了してから，`Plugin/FlowType_H/` と `Script/FlowType_H/` �
 
   </details>
 
-### トリミング@FlowType_H
+### トリミング@キネティックタイポ_H
 
 初期ラベル: `HexScript`
 
@@ -468,7 +473,7 @@ AviUtl2 を終了してから，`Plugin/FlowType_H/` と `Script/FlowType_H/` �
 
   </details>
 
-### 変形@FlowType_H
+### 変形@キネティックタイポ_H
 
 初期ラベル: `HexScript`
 
@@ -511,7 +516,7 @@ AviUtl2 を終了してから，`Plugin/FlowType_H/` と `Script/FlowType_H/` �
   - 最近傍: ニアレストネイバー (補間なし)
   - バイリニア: バイリニア
 
-### 整列@FlowType_H
+### 整列@キネティックタイポ_H
 
 初期ラベル: `HexScript`
 
@@ -527,7 +532,7 @@ AviUtl2 を終了してから，`Plugin/FlowType_H/` と `Script/FlowType_H/` �
   - 両方: 両方
 - 上書き: 現在の座標に加算するのではなく、値を上書きするか指定
 
-### トランスフォーム@FlowType_H
+### トランスフォーム@キネティックタイポ_H
 
 初期ラベル: `HexScript`
 
@@ -579,7 +584,7 @@ AviUtl2 を終了してから，`Plugin/FlowType_H/` と `Script/FlowType_H/` �
 
   </details>
 
-### 点滅@FlowType_H
+### 点滅@キネティックタイポ_H
 
 初期ラベル: `HexScript`
 
@@ -657,7 +662,7 @@ AviUtl2 を終了してから，`Plugin/FlowType_H/` と `Script/FlowType_H/` �
 
   </details>
 
-### 残像@FlowType_H
+### 残像@キネティックタイポ_H
 
 初期ラベル: `HexScript`
 
@@ -693,13 +698,13 @@ AviUtl2 を終了してから，`Plugin/FlowType_H/` と `Script/FlowType_H/` �
 
 ### オブジェクトメニュー
 
-#### FlowType_H\\テキストを文字ごとに分解
+#### KineticType_H\\テキストを文字ごとに分解
 
 テキストオブジェクトを1文字ごとに別オブジェクトとして分ける．
 
 ### プロパティメニュー
 
-#### FlowType_H\\現在値で上書き
+#### KineticType_H\\現在値で上書き
 
 現在区間の値を選択した区間の値へコピーする．
 
@@ -707,7 +712,7 @@ AviUtl2 を終了してから，`Plugin/FlowType_H/` と `Script/FlowType_H/` �
 - 以前の区間
 - 以降の区間
 
-#### FlowType_H\\値を反転
+#### KineticType_H\\値を反転
 
 選択した区間の値を反転する． (トラックバーは符号の反転，チェックボックスはON/OFF反転)
 
@@ -718,7 +723,7 @@ AviUtl2 を終了してから，`Plugin/FlowType_H/` と `Script/FlowType_H/` �
 - 以前の区間
 - 以降の区間
 
-#### FlowType_H\\プロパティ名をコピー
+#### KineticType_H\\プロパティ名をコピー
 
 プロパティ名を以下の形式でクリップボードへコピーする．(参照式用)
 
@@ -726,20 +731,20 @@ AviUtl2 を終了してから，`Plugin/FlowType_H/` と `Script/FlowType_H/` �
 - {エフェクト名}.{プロパティ名}
 - {レイヤー名}.{エフェクト名}.{プロパティ名}
 
-#### FlowType_H\\参照式をコピー
+#### KineticType_H\\参照式をコピー
 
 参照式をクリップボードへコピーする．
 
-#### FlowType_H\\エフェクトをコピー
+#### KineticType_H\\エフェクトをコピー
 
 エフェクトのパラメータをクリップボードへコピーする．
 
 - エイリアス形式 (INI 形式): `.effect` 形式
-- FlowType_H 形式 (TOML 形式): `モーション@FlowType_H` の `エフェクト::パラメータ` で使用できる形式
+- KineticType_H 形式 (TOML 形式): `モーション@キネティックタイポ_H` の `エフェクト::パラメータ` で使用できる形式
 
 ## ビルド
 
-### プラグイン（`FlowType_H.aux2`）
+### プラグイン（`KineticType_H.aux2`）
 
 Rust（stable）・MSVC（HarfBuzz を C++ のソースからビルドする）・Windows SDK（シェーダーを `fxc` でコンパイルする）が要る．
 
@@ -749,7 +754,7 @@ au2 release   # テスト → リリースビルド → スクリプトの生成
 
 [aviutl2-cli](https://github.com/sevenc-nanashi/aviutl2-cli) の `au2` を使う．ビルドと同梱物は `aviutl2.toml` に書いてある．できた `.au2pkg.zip` を AviUtl2 のプレビューへドラッグ&ドロップすると導入できる．
 
-### スクリプト（`@FlowType_H.anm2`）
+### スクリプト（`@キネティックタイポ_H.anm2`）
 
 `scripts/effects/*.lua` から，Korarei 氏の [astra](https://github.com/korarei/AviUtl2_Astra)（0.7.1 以降．`astra.exe`）で生成する．
 `astra.toml`（設定形式 version 2）にはスクリプトのビルド `[builds.effect]` だけを書いてある．
@@ -761,7 +766,7 @@ python build_scripts.py --no-deploy                     # 生成と検査だけ
 python build_scripts.py --no-deploy --expect-identical  # 配置済みとバイト一致かを確かめる
 ```
 
-生成物は `build/effect/release/@FlowType_H.anm2`．配置すると `Script/FlowType_H/` と `Preset/` へ置く．
+生成物は `build/effect/release/@キネティックタイポ_H.anm2`．配置すると `Script/KineticType_H/` と `Preset/` へ置く．
 `build_scripts.py` は配置先と Lua の構文検査のツールの場所を作者の作業環境に合わせてあるので，ほかの環境では書き換えて使う．
 
 ## ライセンス
@@ -776,5 +781,5 @@ python build_scripts.py --no-deploy --expect-identical  # 配置済みとバイ�
 
 <!-- links -->
 
-[releases-url]: https://github.com/HexBrowns/FlowType_H/releases
-[releases-badge]: https://img.shields.io/github/v/release/HexBrowns/FlowType_H
+[releases-url]: https://github.com/HexBrowns/KineticType_H/releases
+[releases-badge]: https://img.shields.io/github/v/release/HexBrowns/KineticType_H

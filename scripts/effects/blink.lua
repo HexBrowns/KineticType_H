@@ -55,8 +55,8 @@ do
         buffer = require("string.buffer").new()
     end
 
-    local utf8 = obj.module("UTF8@${PROJECT_NAME}")
-    local hash = obj.module("Hash@${PROJECT_NAME}")
+    local utf8 = obj.module("UTF8@${MODULE}")
+    local hash = obj.module("Hash@${MODULE}")
     local hash4d = hash.hash4d
 
     local eps = 1.0e-4
@@ -147,7 +147,7 @@ do
 
             local t
             if INDEX == 0 then
-                local regex = obj.module("Regex@${PROJECT_NAME}")
+                local regex = obj.module("Regex@${MODULE}")
 
                 t = {}
 

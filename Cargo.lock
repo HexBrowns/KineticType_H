@@ -194,20 +194,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "aedcfb3409746eddb02b9e19ebda1c3394f759a152e48ee875a0844d1b955484"
 
 [[package]]
-name = "flowtype-h"
-version = "0.3.2"
-dependencies = [
- "aviutl2",
- "half",
- "harfbuzz-sys",
- "parking_lot",
- "regex",
- "toml",
- "tracing",
- "windows",
-]
-
-[[package]]
 name = "half"
 version = "2.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -263,6 +249,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8b4baf93f58d4425749ca49a51c50ebab072c5df6994d08fed93541c331481dc"
 dependencies = [
  "either",
+]
+
+[[package]]
+name = "kinetic-type-h"
+version = "0.4.0"
+dependencies = [
+ "aviutl2",
+ "half",
+ "harfbuzz-sys",
+ "parking_lot",
+ "regex",
+ "toml",
+ "tracing",
+ "windows",
 ]
 
 [[package]]

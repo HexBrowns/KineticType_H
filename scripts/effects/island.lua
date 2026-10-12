@@ -50,7 +50,7 @@ do
     local order_utils = require("order")
     local order_rank = order_utils.order_rank
 
-    local island = obj.module("Island@${PROJECT_NAME}")
+    local island = obj.module("Island@${MODULE}")
     local scan, fetch = island.scan, island.fetch
 
     local ID = obj.effect_id

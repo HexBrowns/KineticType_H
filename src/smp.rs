@@ -116,7 +116,7 @@ pub fn call(p: *mut SCRIPT_MODULE_PARAM, f: impl FnOnce(&mut Smp)) {
             .or_else(|| e.downcast_ref::<String>().cloned())
             .unwrap_or_else(|| "unknown panic".to_string());
         tracing::error!("Panic in script module: {message}");
-        smp.set_error("Internal error occurred in FlowType_H");
+        smp.set_error("Internal error occurred in KineticType_H");
     }
 }
 

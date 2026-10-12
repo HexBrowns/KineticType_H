@@ -1,4 +1,4 @@
-//! `Vector@FlowType_H`。原作 modules/intern/vector/intern/vector.cpp の移植。
+//! `Vector@KineticType_H`。原作 modules/intern/vector/intern/vector.cpp の移植。
 
 use super::WRONG_COUNT;
 use crate::rotation::{self, Unit, Vec3};

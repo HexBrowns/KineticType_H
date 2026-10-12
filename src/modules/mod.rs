@@ -1,6 +1,6 @@
-//! スクリプトモジュール（`obj.module("UTF8@FlowType_H")` などで読むもの）。原作 plugins/modules の移植。
+//! スクリプトモジュール（`obj.module("UTF8@KineticType_H")` などで読むもの）。原作 plugins/modules の移植。
 //!
-//! 名前は原作と同じ（スクリプト `@FlowType_H.anm2` がこの名前で読む）。原作の `Text@FlowType_H`（property）は
+//! 名前は `<名前>@KineticType_H`（スクリプト `@キネティックタイポ_H.anm2` がこの名前で読む）。原作の `Text@FlowType_K`（property）は
 //! 原作でも登録されていない（text.cpp でコメントアウト）ので移植していない。
 
 pub mod hash;
@@ -11,7 +11,7 @@ pub mod toml;
 pub mod utf8;
 pub mod vector;
 
-/// スクリプトモジュールの型を 1 つ作る。`$name` は `@FlowType_H` の前の部分。
+/// スクリプトモジュールの型を 1 つ作る。`$name` は `@KineticType_H` の前の部分。
 macro_rules! script_module {
     ($ty:ident, $name:literal, [$($fname:literal => $f:path),* $(,)?]) => {
         #[aviutl2::plugin(ScriptModule)]
@@ -31,7 +31,7 @@ macro_rules! script_module {
             fn plugin_info(&self) -> aviutl2::module::ScriptModuleTable {
                 aviutl2::module::ScriptModuleTable {
                     information: format!(
-                        "{}@FlowType_H v{} by HexBrowns (fork of FlowType_K by Korarei)",
+                        "{}@KineticType_H v{} by HexBrowns (fork of FlowType_K by Korarei)",
                         $name,
                         env!("CARGO_PKG_VERSION")
                     ),
